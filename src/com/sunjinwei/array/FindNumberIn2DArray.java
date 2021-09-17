@@ -12,10 +12,14 @@ package com.sunjinwei.array;
  */
 public class FindNumberIn2DArray {
 
-    // 从左到右递增
-    // 从上到下递增
-    // 想到二分 把这个二维数组转移为二叉树 右上角为根节点
-    // 满足二叉搜索树的条件
+    /**
+     * 坐标轴法
+     * 如果大于target 那么向左移动
+     * 如果小于target 那么向下移动
+     * @param matrix
+     * @param target
+     * @return
+     */
     public boolean findNumberIn2DArray(int[][] matrix, int target) {
         // 鲁棒性
         if (matrix == null) {
