@@ -10,6 +10,7 @@ package com.sunjinwei.array;
  * ps:
  * 1. 转化 想象成一颗bst 右上角为根节点 来进行二分
  * 2. 注意鲁棒性的判断 i和j的范围
+ * 3.一行一行的二分
  */
 public class FindNumberIn2DArray {
 
@@ -17,6 +18,9 @@ public class FindNumberIn2DArray {
      * 坐标轴法: 右上角
      * 如果大于target 那么向左移动
      * 如果小于target 那么向下移动
+     * <p>
+     * 时间复杂度：O（m+n）
+     * 空间复杂度: O(1)
      *
      * @param matrix
      * @param target
@@ -96,54 +100,54 @@ public class FindNumberIn2DArray {
     }
 
     /**
-     * 两次二分
-     * 第一次：找到所在行
-     * 第二次：找到所在列
-     * ps：第一次二分 要从右上角开始
+     * 一行一行的进行二分
+     * 时间复杂度：如果是 m 行 n 列，就是 O(mlog(n))
+     * 空间复杂度：O（1）
      *
      * @param matrix
      * @param target
      * @return
      */
-    public boolean searchMatrix(int[][] matrix, int target) {
+    public boolean findNumberIn2DArray3(int[][] matrix, int target) {
+        if (matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
         int row = matrix.length;
         int column = matrix[0].length;
 
-        // 第一次二分：找到所在行 横坐标为 [i][column-1];
-        int left = 0;
-        int right = row - 1;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (matrix[mid][column - 1] == target) {
-                // 收缩左边界
-                left = mid + 1;
-            } else if (matrix[mid][column - 1] > target) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
+        for (int i = 0; i < row; i++) {
+            // 剪枝：如果该行第一列的元素大于target 退出循环
+            if (matrix[i][0] > target) {
+                break;
+            }
+            // 剪枝：如果该行最后一列元素小于target 进入下一个
+            if (matrix[i][column - 1] < target) {
+                continue;
+            }
+            // 进入二分处理
+            int res = binarySearch(matrix, i, column, target);
+            if (res != -1) {
+                return true;
             }
         }
-        if (right < 0) {
-            return false;
-        }
-        row = right;
-        if (matrix[row][column - 1] == target) {
-            return true;
-        }
-        // 第二次二分
-        left = 0;
-        right = column - 1;
+        return false;
+    }
+
+    private int binarySearch(int[][] matrix, int row, int column, int target) {
+        int left = 0;
+        int right = column - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
             if (matrix[row][mid] == target) {
-                return true;
+                // 这里要返回mid 不能返回target 因为target也可能等于-1
+                return mid;
             } else if (matrix[row][mid] > target) {
                 right = mid - 1;
             } else {
                 left = mid + 1;
             }
         }
-        return false;
+        return -1;
     }
 
 }
