@@ -51,6 +51,44 @@ public class Delete_N_Node {
         return head;
     }
 
+    /**
+     * 方法2：使用 fast != null 来判断
+     *
+     * @param head
+     * @param n
+     * @return
+     */
+    public ListNode deleteNNode2(ListNode head, int n) {
+        if (head == null || n <= 0) {
+            return head;
+        }
+        if (head.next == null) {
+            return null;
+        }
+        ListNode fast = head;
+        ListNode slow = head;
+        // 快指针先走n 步
+        while (n > 0) {
+            fast = fast.next;
+            n--;
+        }
+        // 声明一个pre节点
+        ListNode pre = null;
+        while (fast != null) {
+            pre = slow;
+            fast = fast.next;
+            slow = slow.next;
+        }
+        // 此时的slow就是要删除的节点
+        // 但是要判断一下 删除的节点是不是头节点的情况 此时pre也是为null的
+        if (slow == head) {
+            return head.next;
+        }
+        pre.next = slow.next;
+        return head;
+    }
+
+
     public static void main(String[] args) {
 
         ListNode listNode1 = new ListNode(1);
